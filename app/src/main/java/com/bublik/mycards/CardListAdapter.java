@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class CardListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Card getItem(int position) {
         return cards.get(position);
     }
 
@@ -42,18 +43,10 @@ public class CardListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView==null)
         {
-           // convertView = new LinearLayout();
-        } else
-        {
-
+           convertView = layoutInflater.inflate(R.layout.cardlist_item, null);
         }
-        return null;
-    }
-
-
-    static class ViewHolder
-    {
-        TextView textView;
-
+        ((TextView)convertView.findViewById(R.id.name)).setText(cards.get(position).name);
+        ((ImageView)convertView.findViewById(R.id.card_image)).setBackgroundColor(cards.get(position).color);
+        return convertView;
     }
 }
