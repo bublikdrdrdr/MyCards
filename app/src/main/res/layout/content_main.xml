@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bublik.mycards.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:id="@+id/mainRelative">
 
     <ListView
         android:layout_width="match_parent"
@@ -14,6 +15,9 @@
         android:id="@+id/cardsListView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:choiceMode="none" />
+        android:choiceMode="none"
+        android:dividerHeight="1dp"
+        android:layoutMode="opticalBounds"
+        android:clipToPadding="false"/>
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     ListView cardsListView;
     CardListAdapter cardListAdapter;
     FloatingActionButton fab;
+    int selectedItem = -1;
+    View options;
 
 
     @Override
@@ -41,15 +44,17 @@ public class MainActivity extends AppCompatActivity {
         cardsListView.setOnItemLongClickListener(cardClickListener);
         cardsListView.setOnScrollListener(cardClickListener);
 
+        options = LayoutInflater.from(this).inflate(R.layout.selected_item_options, null);
         testFill();
 
     }
 
 
-    int previousSelected = -1;
+
     View previousSelectedView = null;
     public void selectCardFromList(View view, int index)
     {
+        selectedItem = index;
         if (previousSelectedView == view) return;
         if (previousSelectedView!=null)
         {
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void unselectAll()
     {
+        selectedItem = -1;
         if (previousSelectedView!=null)
         {
             setItemSelection(previousSelectedView, false);
@@ -69,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         fab.show();
     }
 
+
+
+
+    public boolean userScroll = true;
     private void setItemSelection(View view, boolean select)
     {
         //TODO make selection by setting elevation 10-20dp
@@ -82,6 +92,50 @@ public class MainActivity extends AppCompatActivity {
         }
 
         view.setBackgroundColor(color);
+
+        //((LinearLayout) view).addView(options);
+
+
+
+        if (cardsListView.getLastVisiblePosition()==selectedItem) {
+            int to = selectedItem + 1;
+            userScroll = false;
+            if (to==cardsListView.getAdapter().getCount())
+            {
+                cardsListView.scrollListBy(view.getHeight());
+            }
+
+            cardsListView.smoothScrollToPosition(to);
+        }
+
+        if (cardsListView.getFirstVisiblePosition()==selectedItem)
+        {
+            int to = selectedItem -1;
+            userScroll = false;
+
+            if (selectedItem == 0)
+            {
+                cardsListView.scrollListBy(-view.getHeight());
+            }
+
+            cardsListView.smoothScrollToPosition(to);
+        }
+
+     /*   int[] loc = new int[2];
+        view.getLocationInWindow(loc);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.mainRelative);
+        int[] loc2 = new int[2];
+        relativeLayout.getLocationInWindow(loc2);
+        LinearLayout v2 = new LinearLayout(this);
+        v2.setBackgroundColor(Color.BLUE);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(view.getWidth(), view.getHeight());
+        layoutParams.topMargin = loc[1] - loc2[1];
+        v2.setLayoutParams(layoutParams);
+        v2.setTop(200);
+        v2.setLeft(loc[0]);
+        relativeLayout.addView(v2, layoutParams);
+        v2.setElevation(20);*/
+
 
     }
 
@@ -103,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < 20; i++)
         {
-            myCards.add(new Card(getRandomString(), Color.RED));
+            myCards.add(new Card(Integer.toString(i), Color.RED));
         }
         cardListAdapter = new CardListAdapter(this, myCards);
         cardsListView.setAdapter(cardListAdapter);
